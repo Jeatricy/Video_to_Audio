@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17836b">
+  <meta name="description" content="声迹：在本机提取视频音轨，支持无损复制、33 种输出格式和批量转换。">
+  <title>声迹 · 视频转音频</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true"><defs>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M4 10v4m4-8v12m4-15v18m4-15v12m4-8v4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 0 1 4.6 1c0 1.5-2.3 2-2.3 3m0 3h.01"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 10h18"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m10 8 6 4-6 4Z"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 8l12-2"/><ellipse cx="6" cy="18" rx="3" ry="3"/><ellipse cx="18" cy="16" rx="3" ry="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7Z"/></symbol>
+    <symbol id="i-retry" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h6m4 0h6M4 17h10m4 0h2"/><circle cx="12" cy="7" r="2"/><circle cx="16" cy="17" r="2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><rect x="12" y="11" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5ZM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></symbol>
+  </defs></svg>
+
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="声迹首页"><span class="brand-mark"><svg class="icon"><use href="#i-wave"/></svg></span><span><strong data-i18n="brand">声迹</strong><small>AUDIO EXTRACTOR</small></span></a>
+    <div class="nav-label" data-i18n="workspace">工作空间</div>
+    <nav aria-label="主导航">
+      <button class="nav-item active" data-view="workspace" aria-label="转换工作台"><svg class="icon"><use href="#i-grid"/></svg><span data-i18n="workbench">转换工作台</span></button>
+      <button class="nav-item" data-view="history" aria-label="转换记录"><svg class="icon"><use href="#i-clock"/></svg><span data-i18n="history">转换记录</span><span id="history-badge" class="nav-count">0</span></button>
+      <button class="nav-item" data-view="help" aria-label="使用帮助"><svg class="icon"><use href="#i-help"/></svg><span data-i18n="help">使用帮助</span></button>
+    </nav>
+    <div class="sidebar-note"><span class="note-icon"><svg class="icon"><use href="#i-shield"/></svg></span><strong data-i18n="localTitle">你的文件，留在本机</strong><p data-i18n="localBody">转换在这台电脑上完成，无需上传到云端。</p><div class="local-label"><span class="status-dot"></span><span data-i18n="localMode">本地运行模式</span></div></div>
+    <div class="sidebar-bottom"><span>v1.0.0</span><span>Made for your audio.</span></div>
+  </aside>
+
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumb"><span data-i18n="workspace">工作空间</span><span class="slash">/</span><strong id="view-title" data-i18n="workbench">转换工作台</strong></div><div class="topbar-actions"><span id="engine-status" class="engine-pill"><span class="status-dot checking"></span><span data-i18n="connecting">正在连接引擎</span></span><button id="language-button" class="plain-button language" title="Switch language">中 / EN</button><button id="mini-button" class="icon-button" title="迷你悬浮窗" aria-label="迷你悬浮窗"><svg class="icon"><use href="#i-pin"/></svg></button></div></header>
+
+    <main>
+      <div class="page-heading"><div><div class="eyebrow">VIDEO TO AUDIO</div><h1 id="page-title" data-i18n="pageTitle">让视频里的声音，独立出来。</h1><p id="page-subtitle" data-i18n="pageSubtitle">拖入视频，选择格式。剩下的交给声迹。</p></div><button id="open-output" class="button secondary"><svg class="icon"><use href="#i-folder"/></svg><span data-i18n="outputFolder">输出文件夹</span></button></div>
+
+      <section id="workspace-view" class="workspace-grid">
+        <div class="workspace-left">
+          <section class="drop-card" id="drop-zone" tabindex="0" role="button" aria-label="拖放或选择视频文件">
+            <div class="drop-orbit"><span class="orbit-file orbit-video"><svg class="icon"><use href="#i-video"/></svg></span><span class="orbit-arrow"><svg class="icon"><use href="#i-arrow"/></svg></span><span class="orbit-file orbit-audio"><svg class="icon"><use href="#i-wave"/></svg></span><span class="orbit-spark spark-1"></span><span class="orbit-spark spark-2"></span></div>
+            <h2 data-i18n="dropTitle">把视频拖到这里</h2><p data-i18n="dropSubtitle">支持多个文件，也可以直接添加整个文件夹</p>
+            <div class="drop-buttons"><button id="pick-files" class="button primary"><svg class="icon"><use href="#i-plus"/></svg><span data-i18n="chooseFiles">选择文件</span></button><button id="pick-directory" class="button secondary"><svg class="icon"><use href="#i-folder"/></svg><span data-i18n="chooseDirectory">添加文件夹</span></button></div>
+            <div class="input-formats"><span>MP4</span><span>MKV</span><span>MOV</span><span>AVI</span><span>WEBM</span><span data-i18n="moreFormats">及更多格式</span></div>
+            <button id="native-pick" class="text-button native-pick" data-i18n="nativePick">大文件？直接选取本机文件，免复制</button>
+            <input type="file" id="file-input" multiple hidden><input type="file" id="directory-input" multiple webkitdirectory hidden>
+          </section>
+
+          <section class="queue-card"><div class="section-heading"><div><h2 data-i18n="queue">转换队列</h2><span id="queue-count" class="count-pill">0</span></div><div class="queue-tools"><button id="cancel-all" class="text-button" hidden data-i18n="cancelAll">取消剩余</button><button id="clear-finished" class="text-button muted" data-i18n="clearFinished">清除已结束</button></div></div><div id="queue-list" class="file-list"><div class="empty-state"><span class="empty-icon"><svg class="icon"><use href="#i-music"/></svg></span><strong data-i18n="emptyTitle">等待你的第一个文件</strong><p data-i18n="emptyBody">添加视频后，音轨信息和转换进度会显示在这里。</p></div></div><div class="queue-bottom"><span id="queue-summary" data-i18n="queueEmpty">还没有添加文件</span><button id="download-all" class="text-button" disabled><svg class="icon"><use href="#i-download"/></svg><span data-i18n="downloadAll">打包下载</span></button></div></section>
+
+          <div class="privacy-line"><svg class="icon"><use href="#i-lock"/></svg><span data-i18n="privacyLine">本机处理 · 保留原文件 · 支持视频与音频输入</span></div>
+        </div>
+
+        <aside class="settings-card" aria-label="转换设置"><div class="section-heading"><div><svg class="icon"><use href="#i-sliders"/></svg><h2 data-i18n="settings">输出设置</h2></div><button id="reset-settings" class="text-button muted" data-i18n="reset">重置</button></div>
+          <div class="settings-body">
+            <label class="field-label" data-i18n="outputFormat" for="format-select">输出格式</label>
+            <div class="preset-tabs" role="group" aria-label="快捷格式"><button data-preset="mp3">MP3</button><button data-preset="wav" class="active">WAV</button><button data-preset="copy" data-i18n="originalAudio">原始音轨</button></div>
+            <select id="format-select" class="format-select" aria-label="输出格式"><option value="wav">WAV · PCM</option></select>
+            <div class="codec-info"><span id="codec-name">PCM</span><span id="format-badge" class="quality-tag" data-i18n="lossless">无损格式</span></div>
+            <p class="format-description" id="format-description" data-i18n="wavDescription">未压缩音频，适合剪辑和后期制作。</p>
+
+            <div class="settings-divider"></div>
+            <div id="encoding-fields">
+              <div class="field"><label class="field-label" for="rate-select" data-i18n="sampleRate">采样率</label><select id="rate-select"><option value="0" data-i18n="keepOriginal">保持原始</option></select></div>
+              <div class="fields-row"><div class="field"><label class="field-label" for="channels-select" data-i18n="channels">声道</label><select id="channels-select"><option value="0" data-i18n="keepOriginal">保持原始</option><option value="1">单声道</option><option value="2">立体声</option></select></div><div class="field"><label id="quality-label" class="field-label" for="quality-select" data-i18n="bitDepth">位深</label><select id="quality-select"><option value="16">16 bit</option><option value="24">24 bit</option><option value="32">32 bit</option><option value="32f">32 bit float</option></select></div></div>
+              <div class="field volume-field"><div class="label-line"><label class="field-label" for="volume-range"><svg class="icon"><use href="#i-volume"/></svg><span data-i18n="volume">音量</span></label><button class="volume-value" id="volume-reset" title="重置为 100%">100<span>%</span></button></div><input type="range" id="volume-range" min="0" max="300" step="5" value="100"><div class="range-labels"><span>0%</span><span data-i18n="originalVolume">原始音量 100%</span><span>300%</span></div></div>
+              <label class="checkbox-line"><input type="checkbox" id="prefer-copy" checked><span data-i18n="preferCopy">参数一致时优先无损复制</span></label>
+            </div>
+            <div class="copy-notice" id="copy-notice" hidden><svg class="icon"><use href="#i-shield"/></svg><strong data-i18n="copyTitle">保留原始音质</strong><p data-i18n="copyBody">直接提取音轨，不重新编码。输出扩展名根据原音频编码自动选择。</p><span data-i18n="copyNote">采样率、声道和音量保持原始。</span></div>
+            <div class="settings-divider"></div>
+            <div class="output-label"><span class="field-label" data-i18n="saveTo">保存到</span><button id="change-output" class="text-button" data-i18n="change">更改</button></div><div class="output-path" title="输出文件夹"><svg class="icon"><use href="#i-folder"/></svg><span id="output-path">output</span></div>
+            <label class="toggle-line"><span data-i18n="autoStart">添加后自动转换</span><input type="checkbox" id="auto-start" role="switch"><span class="toggle-ui"></span></label>
+          </div>
+          <div class="settings-footer"><div class="conversion-summary"><span id="selected-summary">WAV · PCM · 16 bit</span><span id="start-count" data-i18n="noFiles">未添加文件</span></div><button id="start-conversion" class="button primary start-button" disabled><span data-i18n="start">开始转换</span><svg class="icon"><use href="#i-arrow"/></svg></button><p data-i18n="duplicateNote">同名文件自动编号，已有音频不会被覆盖。</p></div>
+        </aside>
+      </section>
+
+      <section id="history-view" hidden><div class="history-toolbar"><p data-i18n="historyDescription">已结束的转换会保存在这里，关闭浏览器后也能找回。</p><button id="history-download" class="button secondary"><svg class="icon"><use href="#i-download"/></svg><span data-i18n="downloadAll">打包下载</span></button></div><div id="history-list" class="history-list"></div></section>
+
+      <section id="help-view" hidden class="help-grid"><article class="help-card"><span class="help-number">01</span><h2 data-i18n="help1Title">添加文件，选择格式</h2><p data-i18n="help1Body">将一个或多个视频拖入工作台，或点击“选择文件”。文件夹会批量读取其中的媒体文件。大文件建议使用“直接选取本机文件”，不产生源文件副本。</p></article><article class="help-card"><span class="help-number">02</span><h2 data-i18n="help2Title">无损格式与无损复制</h2><p data-i18n="help2Body">WAV、FLAC 等格式保存解码后的声音。“原始音轨”直接复制原编码数据，避免再次压缩。将有损音轨转换为 WAV 不会恢复已经丢失的信息。</p></article><article class="help-card"><span class="help-number">03</span><h2 data-i18n="help3Title">批量转换，随时取消</h2><p data-i18n="help3Body">选择采样率、声道、位深或码率与音量后点击“开始转换”。队列依次处理，可单独取消或重试。有多个音轨时，可以在文件行中选择语言或轨道。</p></article><article class="help-card"><span class="help-number">04</span><h2 data-i18n="help4Title">试听与输出文件</h2><p data-i18n="help4Body">音频直接保存到输出文件夹，也可下载或打包下载。旧式格式会生成最多 60 秒的试听版本。原始 PCM 同时生成 JSON 参数说明，帮助其他软件正确读取。</p></article><article class="help-card wide"><div class="help-about"><span class="brand-mark"><svg class="icon"><use href="#i-wave"/></svg></span><div><h2 data-i18n="aboutTitle">声迹 AudioDrop</h2><p data-i18n="aboutBody">以 Moo0 的音频提取功能为参考打造的独立本机应用。33 种输出格式，加上自动无损提取；使用 FFmpeg 完成实际转换。</p></div></div><div class="about-engine" id="about-engine"></div><p class="muted" data-i18n="miniHelp">Chrome / Edge 可使用右上角的迷你悬浮窗；其他浏览器会切换到紧凑视图。</p></article></section>
+      <footer class="page-footer"><span data-i18n="footer">只留下声音，保留每一个细节。</span><span id="supported-count">33 AUDIO FORMATS</span></footer>
+    </main>
+  </div>
+  <div id="player" class="audio-player" hidden><span class="player-icon"><svg class="icon"><use href="#i-wave"/></svg></span><div class="player-caption"><small data-i18n="preview">音频试听</small><strong id="player-name"></strong></div><audio id="audio-element" controls preload="metadata"></audio><button id="close-player" class="icon-button" aria-label="关闭试听"><svg class="icon"><use href="#i-close"/></svg></button></div>
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+  <div id="connection-banner" class="connection-banner" hidden data-i18n="connectionLost">无法连接本机服务，请保持启动窗口运行。正在尝试重新连接…</div>
+</body>
+</html>

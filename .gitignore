@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.runtime/
+output/
+bin/*.exe
+bin/*.zip
+*.tmp
+.env
+.env.*
+!.env.example
+.agents/
+.codex/
+.aws/
